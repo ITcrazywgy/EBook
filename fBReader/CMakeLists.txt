@@ -1,0 +1,192 @@
+cmake_minimum_required(VERSION 3.4.1)
+
+set(LOCAL_PATH src/main/cpp )
+add_library(DeflatingDecompressor-v3
+            SHARED
+            ${LOCAL_PATH}/DeflatingDecompressor/DeflatingDecompressor.cpp
+            )
+target_link_libraries(DeflatingDecompressor-v3 z)
+add_library(LineBreak-v2
+            SHARED
+            ${LOCAL_PATH}/LineBreak/LineBreaker.cpp
+            ${LOCAL_PATH}/LineBreak/liblinebreak-2.0/linebreak.c
+            ${LOCAL_PATH}/LineBreak/liblinebreak-2.0/linebreakdata.c
+            ${LOCAL_PATH}/LineBreak/liblinebreak-2.0/linebreakdef.c
+            )
+
+set( EXPAT_DIR	${LOCAL_PATH}/expat-2.0.1 )
+
+include_directories(${EXPAT_DIR}/lib)
+include_directories(${EXPAT_DIR})
+add_definitions(-DHAVE_EXPAT_CONFIG_H)
+
+add_library(expat
+            STATIC
+            ${EXPAT_DIR}/lib/xmlparse.c
+            ${EXPAT_DIR}/lib/xmlrole.c
+            ${EXPAT_DIR}/lib/xmltok.c
+            )
+
+
+add_library(NativeFormats-v4
+            SHARED
+            ${LOCAL_PATH}/NativeFormats/main.cpp
+            ${LOCAL_PATH}/NativeFormats/JavaNativeFormatPlugin.cpp
+            ${LOCAL_PATH}/NativeFormats/JavaPluginCollection.cpp
+            ${LOCAL_PATH}/NativeFormats/util/AndroidUtil.cpp
+            ${LOCAL_PATH}/NativeFormats/util/JniEnvelope.cpp
+            ${LOCAL_PATH}/NativeFormats/zlibrary/core/src/constants/ZLXMLNamespace.cpp
+            ${LOCAL_PATH}/NativeFormats/zlibrary/core/src/drm/FileEncryptionInfo.cpp
+            ${LOCAL_PATH}/NativeFormats/zlibrary/core/src/encoding/DummyEncodingConverter.cpp
+            ${LOCAL_PATH}/NativeFormats/zlibrary/core/src/encoding/Utf16EncodingConverters.cpp
+            ${LOCAL_PATH}/NativeFormats/zlibrary/core/src/encoding/Utf8EncodingConverter.cpp
+            ${LOCAL_PATH}/NativeFormats/zlibrary/core/src/encoding/JavaEncodingConverter.cpp
+            ${LOCAL_PATH}/NativeFormats/zlibrary/core/src/encoding/ZLEncodingCollection.cpp
+            ${LOCAL_PATH}/NativeFormats/zlibrary/core/src/encoding/ZLEncodingConverter.cpp
+            ${LOCAL_PATH}/NativeFormats/zlibrary/core/src/filesystem/ZLDir.cpp
+            ${LOCAL_PATH}/NativeFormats/zlibrary/core/src/filesystem/ZLFSManager.cpp
+            ${LOCAL_PATH}/NativeFormats/zlibrary/core/src/filesystem/ZLFile.cpp
+            ${LOCAL_PATH}/NativeFormats/zlibrary/core/src/filesystem/ZLInputStreamDecorator.cpp
+            ${LOCAL_PATH}/NativeFormats/zlibrary/core/src/filesystem/zip/ZLGzipInputStream.cpp
+            ${LOCAL_PATH}/NativeFormats/zlibrary/core/src/filesystem/zip/ZLZDecompressor.cpp
+            ${LOCAL_PATH}/NativeFormats/zlibrary/core/src/filesystem/zip/ZLZipDir.cpp
+            ${LOCAL_PATH}/NativeFormats/zlibrary/core/src/filesystem/zip/ZLZipEntryCache.cpp
+            ${LOCAL_PATH}/NativeFormats/zlibrary/core/src/filesystem/zip/ZLZipHeader.cpp
+            ${LOCAL_PATH}/NativeFormats/zlibrary/core/src/filesystem/zip/ZLZipInputStream.cpp
+            ${LOCAL_PATH}/NativeFormats/zlibrary/core/src/language/ZLCharSequence.cpp
+            ${LOCAL_PATH}/NativeFormats/zlibrary/core/src/language/ZLLanguageDetector.cpp
+            ${LOCAL_PATH}/NativeFormats/zlibrary/core/src/language/ZLLanguageList.cpp
+            ${LOCAL_PATH}/NativeFormats/zlibrary/core/src/language/ZLLanguageMatcher.cpp
+            ${LOCAL_PATH}/NativeFormats/zlibrary/core/src/language/ZLStatistics.cpp
+            ${LOCAL_PATH}/NativeFormats/zlibrary/core/src/language/ZLStatisticsGenerator.cpp
+            ${LOCAL_PATH}/NativeFormats/zlibrary/core/src/language/ZLStatisticsItem.cpp
+            ${LOCAL_PATH}/NativeFormats/zlibrary/core/src/language/ZLStatisticsXMLReader.cpp
+            ${LOCAL_PATH}/NativeFormats/zlibrary/core/src/library/ZLibrary.cpp
+            ${LOCAL_PATH}/NativeFormats/zlibrary/core/src/logger/ZLLogger.cpp
+            ${LOCAL_PATH}/NativeFormats/zlibrary/core/src/util/ZLFileUtil.cpp
+            ${LOCAL_PATH}/NativeFormats/zlibrary/core/src/util/ZLLanguageUtil.cpp
+            ${LOCAL_PATH}/NativeFormats/zlibrary/core/src/util/ZLStringUtil.cpp
+            ${LOCAL_PATH}/NativeFormats/zlibrary/core/src/util/ZLUnicodeUtil.cpp
+            ${LOCAL_PATH}/NativeFormats/zlibrary/core/src/xml/ZLAsynchronousInputStream.cpp
+            ${LOCAL_PATH}/NativeFormats/zlibrary/core/src/xml/ZLPlainAsynchronousInputStream.cpp
+            ${LOCAL_PATH}/NativeFormats/zlibrary/core/src/xml/ZLXMLReader.cpp
+            ${LOCAL_PATH}/NativeFormats/zlibrary/core/src/xml/expat/ZLXMLReaderInternal.cpp
+            ${LOCAL_PATH}/NativeFormats/zlibrary/core/src/unix/filesystem/ZLUnixFSDir.cpp
+            ${LOCAL_PATH}/NativeFormats/zlibrary/core/src/unix/filesystem/ZLUnixFSManager.cpp
+            ${LOCAL_PATH}/NativeFormats/zlibrary/core/src/unix/filesystem/ZLUnixFileInputStream.cpp
+            ${LOCAL_PATH}/NativeFormats/zlibrary/core/src/unix/filesystem/ZLUnixFileOutputStream.cpp
+            ${LOCAL_PATH}/NativeFormats/zlibrary/core/src/unix/library/ZLUnixLibrary.cpp
+            ${LOCAL_PATH}/NativeFormats/zlibrary/text/src/model/ZLCachedMemoryAllocator.cpp
+            ${LOCAL_PATH}/NativeFormats/zlibrary/text/src/model/ZLTextModel.cpp
+            ${LOCAL_PATH}/NativeFormats/zlibrary/text/src/model/ZLTextParagraph.cpp
+            ${LOCAL_PATH}/NativeFormats/zlibrary/text/src/model/ZLTextStyleEntry.cpp
+            ${LOCAL_PATH}/NativeFormats/zlibrary/text/src/model/ZLVideoEntry.cpp
+            ${LOCAL_PATH}/NativeFormats/zlibrary/text/src/fonts/FontManager.cpp
+            ${LOCAL_PATH}/NativeFormats/zlibrary/text/src/fonts/FontMap.cpp
+            ${LOCAL_PATH}/NativeFormats/zlibrary/ui/src/android/filesystem/JavaFSDir.cpp
+            ${LOCAL_PATH}/NativeFormats/zlibrary/ui/src/android/filesystem/JavaInputStream.cpp
+            ${LOCAL_PATH}/NativeFormats/zlibrary/ui/src/android/filesystem/ZLAndroidFSManager.cpp
+            ${LOCAL_PATH}/NativeFormats/zlibrary/ui/src/android/library/ZLAndroidLibraryImplementation.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/bookmodel/BookModel.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/bookmodel/BookReader.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/EncodedTextReader.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/FormatPlugin.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/PluginCollection.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/fb2/FB2BookReader.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/fb2/FB2CoverReader.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/fb2/FB2MetaInfoReader.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/fb2/FB2Plugin.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/fb2/FB2Reader.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/fb2/FB2TagManager.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/fb2/FB2UidReader.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/css/CSSInputStream.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/css/CSSSelector.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/css/StringInputStream.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/css/StyleSheetParser.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/css/StyleSheetTable.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/css/StyleSheetUtil.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/html/HtmlBookReader.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/html/HtmlDescriptionReader.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/html/HtmlEntityCollection.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/html/HtmlPlugin.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/html/HtmlReader.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/html/HtmlReaderStream.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/oeb/NCXReader.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/oeb/OEBBookReader.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/oeb/OEBCoverReader.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/oeb/OEBEncryptionReader.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/oeb/OEBMetaInfoReader.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/oeb/OEBPlugin.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/oeb/OEBSimpleIdReader.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/oeb/OEBTextStream.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/oeb/OEBUidReader.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/oeb/OPFReader.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/oeb/XHTMLImageFinder.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/pdb/BitReader.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/pdb/DocDecompressor.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/pdb/HtmlMetainfoReader.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/pdb/HuffDecompressor.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/pdb/MobipocketHtmlBookReader.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/pdb/MobipocketPlugin.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/pdb/PalmDocLikePlugin.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/pdb/PalmDocLikeStream.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/pdb/PalmDocStream.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/pdb/PdbPlugin.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/pdb/PdbReader.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/pdb/PdbStream.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/pdb/SimplePdbPlugin.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/rtf/RtfBookReader.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/rtf/RtfDescriptionReader.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/rtf/RtfPlugin.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/rtf/RtfReader.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/rtf/RtfReaderStream.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/txt/PlainTextFormat.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/txt/TxtBookReader.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/txt/TxtPlugin.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/txt/TxtReader.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/util/EntityFilesCollector.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/util/MergedStream.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/util/MiscUtil.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/util/XMLTextStream.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/xhtml/XHTMLReader.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/xhtml/XHTMLTagInfo.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/doc/DocBookReader.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/doc/DocMetaInfoReader.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/doc/DocPlugin.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/doc/DocStreams.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/doc/OleMainStream.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/doc/OleStorage.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/doc/OleStream.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/doc/OleStreamParser.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/doc/OleStreamReader.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/doc/OleUtil.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/doc/DocInlineImageReader.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/doc/DocFloatImageReader.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/formats/doc/DocAnsiConverter.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/library/Author.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/library/Book.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/library/Comparators.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/library/Tag.cpp
+            ${LOCAL_PATH}/NativeFormats/fbreader/src/library/UID.cpp
+            )         
+
+include_directories(${LOCAL_PATH}/NativeFormats/util
+                    ${LOCAL_PATH}/NativeFormats/zlibrary/core/src/constants
+                    ${LOCAL_PATH}/NativeFormats/zlibrary/core/src/drm
+                    ${LOCAL_PATH}/NativeFormats/zlibrary/core/src/encoding
+                    ${LOCAL_PATH}/NativeFormats/zlibrary/core/src/filesystem
+                    ${LOCAL_PATH}/NativeFormats/zlibrary/core/src/image
+                    ${LOCAL_PATH}/NativeFormats/zlibrary/core/src/language
+                    ${LOCAL_PATH}/NativeFormats/zlibrary/core/src/library
+                    ${LOCAL_PATH}/NativeFormats/zlibrary/core/src/logger
+                    ${LOCAL_PATH}/NativeFormats/zlibrary/core/src/util
+                    ${LOCAL_PATH}/NativeFormats/zlibrary/core/src/xml
+                    ${LOCAL_PATH}/NativeFormats/zlibrary/text/src/model
+                    ${LOCAL_PATH}/NativeFormats/zlibrary/text/src/fonts )
+
+
+target_link_libraries(NativeFormats-v4
+                      expat
+                      log
+                      z
+                      )

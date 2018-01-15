@@ -1,0 +1,4 @@
+<resources>
+  <style name="FBReader.Activity" parent="android:Theme.DeviceDefault">
+	</style>
+</resources>
