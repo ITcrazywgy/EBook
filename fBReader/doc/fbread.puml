@@ -1,0 +1,52 @@
+@startuml
+
+
+TxtReader <|-- TexBookReader
+BookReader <|-- TexBookReader
+class TexBookReader{
+    const PlainTextFormat &myFormat
+}
+
+abstract class BookReader{
+    BookModel &myModel
+}
+
+
+EncodedTextReader <|-- TxtReader
+abstract class TxtReader{
+    shared_ptr<TxtReaderCore> myCore
+}
+abstract class EncodedTextReader{
+    shared_ptr<ZLEncodingConverter> myConverter
+}
+
+
+
+ZLEncodingConverter <|-- JavaEncodingConverter
+class JavaEncodingConverter
+ZLEncodingConverter <|-- Utf16EncodingConverter
+class Utf16EncodingConverter
+ZLEncodingConverter <|-- Utf8EncodingConverter
+class Utf8EncodingConverter
+class ZLEncodingConverter {
+	static const std::string ASCII;
+	static const std::string UTF8;
+	static const std::string UTF16;
+	static const std::string UTF16BE;
+}
+
+
+TxtReaderCore <|-- TxtReaderCoreUtf16
+class TxtReaderCoreUtf16
+TxtReaderCoreUtf16 <|-- TxtReaderCoreUtf16BE
+class TxtReaderCoreUtf16BE
+TxtReaderCoreUtf16 <|-- TxtReaderCoreUtf16LE
+class TxtReaderCoreUtf16LE
+class TxtReaderCore {
+	TxtReader &myReader;
+}
+
+
+
+
+@enduml

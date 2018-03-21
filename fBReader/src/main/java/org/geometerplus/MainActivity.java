@@ -14,7 +14,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         try {
-            String path = Environment.getExternalStorageDirectory() + "/js.epub";
+            String path = Environment.getExternalStorageDirectory() + "/book.txt";
             FBReaderIntents.startReadBook(this, path);
         } catch (Exception e) {
             e.printStackTrace();

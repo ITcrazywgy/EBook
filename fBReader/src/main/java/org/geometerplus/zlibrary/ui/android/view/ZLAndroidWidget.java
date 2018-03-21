@@ -102,9 +102,6 @@ public class ZLAndroidWidget extends MainView implements ZLViewWidget, View.OnLo
 		}
 		super.onDraw(canvas);
 
-//		final int w = getWidth();
-//		final int h = getMainAreaHeight();
-
 		myBitmapManager.setSize(getWidth(), getMainAreaHeight());
 		if (getAnimationProvider().inProgress()) {
 			onDrawInScrolling(canvas);
