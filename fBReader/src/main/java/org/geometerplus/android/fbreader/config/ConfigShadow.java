@@ -19,32 +19,13 @@
 
 package org.geometerplus.android.fbreader.config;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
 
 import org.geometerplus.zlibrary.core.options.Config;
 
-import java.util.LinkedList;
-import java.util.List;
-
 public final class ConfigShadow extends Config {
     private final Context myContext;
-    private final List<Runnable> myDeferredActions = new LinkedList<Runnable>();
 
-    private final BroadcastReceiver myReceiver = new BroadcastReceiver() {
-        public void onReceive(Context context, Intent intent) {
-            try {
-                setToCache(
-                        intent.getStringExtra("group"),
-                        intent.getStringExtra("name"),
-                        intent.getStringExtra("value")
-                );
-            } catch (Exception e) {
-                // ignore
-            }
-        }
-    };
 
     public ConfigShadow(Context context) {
         myContext = context;

@@ -32,13 +32,13 @@ public class MiscOptions {
 	public final ZLBooleanOption EnableDoubleTap;
 	public final ZLBooleanOption NavigateAllWords;
 
-	public static enum WordTappingActionEnum {
+	public enum WordTappingActionEnum {
 		doNothing, selectSingleWord, startSelecting, openDictionary
 	}
 	public final ZLEnumOption<WordTappingActionEnum> WordTappingAction;
 
 	public final ZLIntegerRangeOption ToastFontSizePercent;
-	public static enum FootnoteToastEnum {
+	public enum FootnoteToastEnum {
 		never, footnotesOnly, footnotesAndSuperscripts, allInternalLinks
 	}
 	public final ZLEnumOption<FootnoteToastEnum> ShowFootnoteToast;

@@ -41,9 +41,9 @@ public abstract class ZLFile implements InputStreamHolder {
 		int	ZIP = 0x0100;
 		int	TAR = 0x0200;
 		int	ARCHIVE = 0xff00;
-	};
+	}
 
-	private String myExtension;
+    private String myExtension;
 	private String myShortName;
 	protected int myArchiveType;
 	private boolean myIsCached;

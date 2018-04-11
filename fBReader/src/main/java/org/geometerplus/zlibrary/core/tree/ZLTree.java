@@ -87,7 +87,7 @@ public abstract class ZLTree<T extends ZLTree<T>> implements Iterable<T> {
 					if (((ZLTree<?>)subtree).mySize <= index) {
 						index -= ((ZLTree<?>)subtree).mySize;
 					} else {
-						return (T)subtree.getTreeByParagraphNumber(index);
+						return subtree.getTreeByParagraphNumber(index);
 					}
 				}
 			}

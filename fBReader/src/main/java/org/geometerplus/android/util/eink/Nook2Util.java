@@ -82,27 +82,27 @@ public class Nook2Util {
 			if (successful) {
 				if (DeviceType.Instance() == DeviceType.NOOK12 && mEpdController == null) {
 					Constructor[] EpdControllerConstructors = epdControllerClass.getConstructors();
-					mEpdController = EpdControllerConstructors[0].newInstance(new Object[] { a });
+					mEpdController = EpdControllerConstructors[0].newInstance(a);
 				}
 				Constructor RegionParamsConstructor = epdControllerRegionParamsClass
-					.getConstructor(new Class[] { Integer.TYPE, Integer.TYPE,
-						Integer.TYPE, Integer.TYPE, epdControllerWaveClass});
+					.getConstructor(Integer.TYPE, Integer.TYPE,
+							Integer.TYPE, Integer.TYPE, epdControllerWaveClass);
 
 				Object localRegionParams = RegionParamsConstructor
-					.newInstance(new Object[] { 0, 0, 600, 800, waveEnums[1]}); // Wave = GU
+					.newInstance(0, 0, 600, 800, waveEnums[1]); // Wave = GU
 
 				Method epdControllerSetRegionMethod = epdControllerClass.getMethod(
-					"setRegion", new Class[] { String.class,
+					"setRegion", String.class,
 						epdControllerRegionClass,
-						epdControllerRegionParamsClass, epdControllerModeClass });
+						epdControllerRegionParamsClass, epdControllerModeClass);
 				if (DeviceType.Instance() == DeviceType.NOOK12) {
 					epdControllerSetRegionMethod
-						.invoke(mEpdController, new Object[] { "FBReaderJ",
-							regionEnums[2], localRegionParams, modeEnums[2] }); // Mode = ONESHOT_ALL
+						.invoke(mEpdController, "FBReaderJ",
+								regionEnums[2], localRegionParams, modeEnums[2]); // Mode = ONESHOT_ALL
 				} else {
 					epdControllerSetRegionMethod
-						.invoke(null, new Object[] { "FBReaderJ",
-							regionEnums[2], localRegionParams, modeEnums[2] }); // Mode = ONESHOT_ALL
+						.invoke(null, "FBReaderJ",
+								regionEnums[2], localRegionParams, modeEnums[2]); // Mode = ONESHOT_ALL
 				}
 			}
 		} catch (Exception e) {

@@ -34,16 +34,12 @@ public abstract class ZLTextView extends ZLTextViewBase {
         int SCROLL_PERCENTAGE = 3;
     }
 
-    ;
-
     private ZLTextModel myModel;
 
     private interface SizeUnit {
         int PIXEL_UNIT = 0;
         int LINE_UNIT = 1;
     }
-
-    ;
 
     private int myScrollingMode;
     private int myOverlappingValue;

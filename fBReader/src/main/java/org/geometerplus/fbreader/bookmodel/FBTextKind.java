@@ -62,4 +62,4 @@ public interface FBTextKind {
 	//byte BOOK_HYPERLINK = 38;
 
 	byte XHTML_TAG_P = 51;
-};
+}

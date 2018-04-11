@@ -50,7 +50,7 @@ public class SuperToast {
      */
     public interface OnClickListener {
 
-        public void onClick(View view, Parcelable token);
+        void onClick(View view, Parcelable token);
 
     }
 
@@ -61,7 +61,7 @@ public class SuperToast {
      */
     public interface OnDismissListener {
 
-        public void onDismiss(View view);
+        void onDismiss(View view);
 
     }
 

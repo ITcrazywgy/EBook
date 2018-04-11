@@ -25,13 +25,14 @@ import org.geometerplus.zlibrary.core.image.ZLImage;
 import org.geometerplus.zlibrary.text.model.CachedCharStorage;
 import org.geometerplus.zlibrary.text.model.ZLTextModel;
 import org.geometerplus.zlibrary.text.model.ZLTextPlainModel;
+import org.geometerplus.fbreader.book.Book;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
 public final class BookModel {
-	public static BookModel createModel(org.geometerplus.fbreader.book.Book book, FormatPlugin plugin) throws BookReadingException {
+	public static BookModel createModel(Book book, FormatPlugin plugin) throws BookReadingException {
 		if (plugin instanceof BuiltinFormatPlugin) {
 			final BookModel model = new BookModel(book);
 			// readModel 是插件加载书籍的关键
@@ -44,7 +45,7 @@ public final class BookModel {
 		);
 	}
 
-	public final org.geometerplus.fbreader.book.Book Book;
+	public final Book Book;
 	public final TOCTree TOCTree = new TOCTree();
 	public final FontManager FontManager = new FontManager();
 

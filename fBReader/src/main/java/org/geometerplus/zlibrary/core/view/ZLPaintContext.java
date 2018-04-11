@@ -196,7 +196,7 @@ abstract public class ZLPaintContext {
 			return "ZLPaintContext.Size[" + Width + "x" + Height + "]";
 		}
 	}
-	public static enum ScalingType {
+	public enum ScalingType {
 		OriginalSize,
 		IntegerCoefficient,
 		FitMaximum

@@ -22,7 +22,7 @@ package org.geometerplus.fbreader.formats;
 import org.geometerplus.zlibrary.core.filesystem.ZLFile;
 
 public interface IFormatPluginCollection {
-	public interface Holder {
+	interface Holder {
 		IFormatPluginCollection getCollection();
 	}
 

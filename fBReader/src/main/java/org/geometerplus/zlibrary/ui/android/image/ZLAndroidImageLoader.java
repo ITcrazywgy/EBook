@@ -95,7 +95,7 @@ class ZLAndroidImageLoader {
 		public void fireMessage(String imageUrl) {
 			sendMessage(obtainMessage(0, imageUrl));
 		}
-	};
+	}
 
-	private final ImageSynchronizedHandler myImageSynchronizedHandler = new ImageSynchronizedHandler();
+    private final ImageSynchronizedHandler myImageSynchronizedHandler = new ImageSynchronizedHandler();
 }

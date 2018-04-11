@@ -1,2 +1,2 @@
-include ':superToasts'
+include ':reader'
 include ':fBReader'

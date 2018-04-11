@@ -59,6 +59,16 @@ abstract class PopupPanel extends ZLApplication.PopupPanel {
 		}
 	}
 
+	public static void removeAllWindows(ZLApplication application, Activity activity) {
+		for (ZLApplication.PopupPanel popup : application.popupPanels()) {
+			if (popup instanceof PopupPanel) {
+				((PopupPanel)popup).removeWindow(activity);
+			} else if (popup instanceof NavigationPopup) {
+				((NavigationPopup)popup).removeWindow(activity);
+			}
+		}
+	}
+
 	private final void removeWindow(Activity activity) {
 		if (myWindow != null && activity == myWindow.getContext()) {
 			final ViewGroup root = (ViewGroup)myWindow.getParent();

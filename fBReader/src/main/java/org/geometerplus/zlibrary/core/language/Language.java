@@ -32,7 +32,7 @@ public class Language implements Comparable<Language> {
 	public static final String MULTI_CODE = "multi";
 	public static final String SYSTEM_CODE = "system";
 
-	private static enum Order {
+	private enum Order {
 		Before,
 		Normal,
 		After

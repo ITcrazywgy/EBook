@@ -58,7 +58,7 @@ public interface ZLTextParagraph {
 		boolean next();
 	}
 
-	public EntryIterator iterator();
+	EntryIterator iterator();
 
 	interface Kind {
 		byte TEXT_PARAGRAPH = 0;
@@ -70,7 +70,7 @@ public interface ZLTextParagraph {
 		byte PSEUDO_END_OF_SECTION_PARAGRAPH = 6;
 		byte END_OF_TEXT_PARAGRAPH = 7;
 		byte ENCRYPTED_SECTION_PARAGRAPH = 8;
-	};
+	}
 
-	byte getKind();
+    byte getKind();
 }

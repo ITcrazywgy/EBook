@@ -45,7 +45,7 @@ abstract public class ZLView implements ZLViewEnums {
 		return myViewContext.getHeight();
 	}
 
-	abstract public interface FooterArea {
+	public interface FooterArea {
 		int getHeight();
 		void paint(ZLPaintContext context);
 	}

@@ -25,25 +25,35 @@ import android.view.WindowManager;
 
 import com.github.johnpersano.supertoasts.SuperActivityToast;
 
+import org.geometerplus.android.fbreader.config.ConfigShadow;
 import org.geometerplus.zlibrary.core.options.ZLIntegerOption;
 import org.geometerplus.zlibrary.core.options.ZLIntegerRangeOption;
 import org.geometerplus.zlibrary.core.options.ZLStringOption;
-import org.geometerplus.zlibrary.ui.android.library.ZLAndroidApplication;
+import org.geometerplus.zlibrary.ui.android.image.ZLAndroidImageManager;
 import org.geometerplus.zlibrary.ui.android.library.ZLAndroidLibrary;
 import org.geometerplus.zlibrary.ui.android.view.AndroidFontUtil;
 
 public abstract class FBReaderMainActivity extends Activity {
 
     private volatile SuperActivityToast myToast;
-
+    private ZLAndroidLibrary myLibrary;
+    private ConfigShadow myConfig;
     @Override
     protected void onCreate(Bundle saved) {
         super.onCreate(saved);
+
+        try {
+            Class.forName("android.os.AsyncTask");
+        } catch (Throwable t) {
+        }
+        myConfig = new ConfigShadow(this);
+        new ZLAndroidImageManager();
+        myLibrary = new ZLAndroidLibrary(getApplication());
     }
 
 
     public ZLAndroidLibrary getZLibrary() {
-        return ((ZLAndroidApplication) getApplication()).library();
+        return myLibrary;
     }
 
     /* ++++++ SCREEN BRIGHTNESS ++++++ */

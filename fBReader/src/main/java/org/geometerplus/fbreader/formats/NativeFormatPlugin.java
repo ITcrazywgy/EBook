@@ -77,7 +77,7 @@ public class NativeFormatPlugin extends BuiltinFormatPlugin {
 			infos = readEncryptionInfosNative(book);
 		}
 		return infos != null
-			? Arrays.<FileEncryptionInfo>asList(infos)
+			? Arrays.asList(infos)
 			: Collections.<FileEncryptionInfo>emptyList();
 	}
 

@@ -44,12 +44,14 @@ PluginCollection &PluginCollection::Instance() {
 	if (ourInstance == 0) {
 		ourInstance = new PluginCollection();
 		ourInstance->myPlugins.push_back(new TxtPlugin());
-		/*ourInstance->myPlugins.push_back(new FB2Plugin());
-		ourInstance->myPlugins.push_back(new HtmlPlugin());
-		ourInstance->myPlugins.push_back(new MobipocketPlugin());
+		ourInstance->myPlugins.push_back(new FB2Plugin());
 		ourInstance->myPlugins.push_back(new OEBPlugin());
+		ourInstance->myPlugins.push_back(new MobipocketPlugin());
+		/*
+		ourInstance->myPlugins.push_back(new HtmlPlugin());
 		ourInstance->myPlugins.push_back(new RtfPlugin());
-		ourInstance->myPlugins.push_back(new DocPlugin());*/
+		ourInstance->myPlugins.push_back(new DocPlugin());
+		 */
 	}
 	return *ourInstance;
 }

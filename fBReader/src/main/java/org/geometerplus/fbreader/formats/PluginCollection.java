@@ -72,7 +72,6 @@ public class PluginCollection implements IFormatPluginCollection {
 	private PluginCollection(SystemInfo systemInfo) {
 		if (Build.VERSION.SDK_INT >= 8) {
 			myExternalPlugins.add(new DjVuPlugin(systemInfo));
-			myExternalPlugins.add(new PDFPlugin(systemInfo));
 			myExternalPlugins.add(new ComicBookPlugin(systemInfo));
 		}
 	}

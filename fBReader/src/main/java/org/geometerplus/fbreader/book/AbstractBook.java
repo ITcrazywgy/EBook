@@ -31,397 +31,399 @@ import java.util.HashSet;
 import java.util.List;
 
 public abstract class AbstractBook extends TitledEntity<AbstractBook> {
-	public static final String FAVORITE_LABEL = "favorite";
-	public static final String READ_LABEL = "read";
-	public static final String SYNCHRONISED_LABEL = "sync-success";
-	public static final String SYNC_FAILURE_LABEL = "sync-failure";
-	public static final String SYNC_DELETED_LABEL = "sync-deleted";
-	public static final String SYNC_TOSYNC_LABEL = "sync-tosync";
+    public static final String FAVORITE_LABEL = "favorite";
+    public static final String READ_LABEL = "read";
+    public static final String SYNCHRONISED_LABEL = "sync-success";
+    public static final String SYNC_FAILURE_LABEL = "sync-failure";
+    public static final String SYNC_DELETED_LABEL = "sync-deleted";
+    public static final String SYNC_TOSYNC_LABEL = "sync-tosync";
 
-	protected volatile long myId;
+    protected volatile long myId;
 
-	protected volatile String myEncoding;
-	protected volatile String myLanguage;
-	protected volatile List<Author> myAuthors;
-	protected volatile List<Tag> myTags;
-	protected volatile List<Label> myLabels;
-	protected volatile SeriesInfo mySeriesInfo;
-	protected volatile List<UID> myUids;
-	protected volatile RationalNumber myProgress;
+    protected volatile String myEncoding;
+    protected volatile String myLanguage;
+    protected volatile List<Author> myAuthors;
+    protected volatile List<Tag> myTags;
+    protected volatile List<Label> myLabels;
+    protected volatile SeriesInfo mySeriesInfo;
+    protected volatile List<UID> myUids;
+    protected volatile RationalNumber myProgress;
 
-	public volatile boolean HasBookmark;
+    public volatile boolean HasBookmark;
 
-	protected enum SaveState {
-		Saved,
-		ProgressNotSaved,
-		NotSaved;
-	};
-	protected volatile SaveState mySaveState = SaveState.NotSaved;
+    protected enum SaveState {
+        Saved,
+        ProgressNotSaved,
+        NotSaved
+    }
 
-	AbstractBook(long id, String title, String encoding, String language) {
-		super(title);
-		myId = id;
-		myEncoding = encoding;
-		myLanguage = language;
-		mySaveState = SaveState.Saved;
-	}
+    protected volatile SaveState mySaveState = SaveState.NotSaved;
 
-	public abstract String getPath();
+    AbstractBook(long id, String title, String encoding, String language) {
+        super(title);
+        myId = id;
+        myEncoding = encoding;
+        myLanguage = language;
+        mySaveState = SaveState.Saved;
+    }
 
-	public void updateFrom(AbstractBook book) {
-		if (book == null || myId != book.myId) {
-			return;
-		}
-		setTitle(book.getTitle());
-		setEncoding(book.myEncoding);
-		setLanguage(book.myLanguage);
-		if (!ComparisonUtil.equal(myAuthors, book.myAuthors)) {
-			myAuthors = book.myAuthors != null ? new ArrayList<Author>(book.myAuthors) : null;
-			mySaveState = SaveState.NotSaved;
-		}
-		if (!ComparisonUtil.equal(myTags, book.myTags)) {
-			myTags = book.myTags != null ? new ArrayList<Tag>(book.myTags) : null;
-			mySaveState = SaveState.NotSaved;
-		}
-		if (!MiscUtil.listsEquals(myLabels, book.myLabels)) {
-			myLabels = book.myLabels != null ? new ArrayList<Label>(book.myLabels) : null;
-			mySaveState = SaveState.NotSaved;
-		}
-		if (!ComparisonUtil.equal(mySeriesInfo, book.mySeriesInfo)) {
-			mySeriesInfo = book.mySeriesInfo;
-			mySaveState = SaveState.NotSaved;
-		}
-		if (!MiscUtil.listsEquals(myUids, book.myUids)) {
-			myUids = book.myUids != null ? new ArrayList<UID>(book.myUids) : null;
-			mySaveState = SaveState.NotSaved;
-		}
-		setProgress(book.myProgress);
-		if (HasBookmark != book.HasBookmark) {
-			HasBookmark = book.HasBookmark;
-			mySaveState = SaveState.NotSaved;
-		}
-	}
+    public abstract String getPath();
 
-	public final List<Author> authors() {
-		return myAuthors != null
-			? Collections.unmodifiableList(myAuthors)
-			: Collections.<Author>emptyList();
-	}
+    public void updateFrom(AbstractBook book) {
+        if (book == null || myId != book.myId) {
+            return;
+        }
+        setTitle(book.getTitle());
+        setEncoding(book.myEncoding);
+        setLanguage(book.myLanguage);
+        if (!ComparisonUtil.equal(myAuthors, book.myAuthors)) {
+            myAuthors = book.myAuthors != null ? new ArrayList<Author>(book.myAuthors) : null;
+            mySaveState = SaveState.NotSaved;
+        }
+        if (!ComparisonUtil.equal(myTags, book.myTags)) {
+            myTags = book.myTags != null ? new ArrayList<Tag>(book.myTags) : null;
+            mySaveState = SaveState.NotSaved;
+        }
+        if (!MiscUtil.listsEquals(myLabels, book.myLabels)) {
+            myLabels = book.myLabels != null ? new ArrayList<Label>(book.myLabels) : null;
+            mySaveState = SaveState.NotSaved;
+        }
+        if (!ComparisonUtil.equal(mySeriesInfo, book.mySeriesInfo)) {
+            mySeriesInfo = book.mySeriesInfo;
+            mySaveState = SaveState.NotSaved;
+        }
+        if (!MiscUtil.listsEquals(myUids, book.myUids)) {
+            myUids = book.myUids != null ? new ArrayList<UID>(book.myUids) : null;
+            mySaveState = SaveState.NotSaved;
+        }
+        setProgress(book.myProgress);
+        if (HasBookmark != book.HasBookmark) {
+            HasBookmark = book.HasBookmark;
+            mySaveState = SaveState.NotSaved;
+        }
+    }
 
-	public final String authorsString(String separator) {
-		final List<Author> authors = myAuthors;
-		if (authors == null || authors.isEmpty()) {
-			return null;
-		}
+    public final List<Author> authors() {
+        return myAuthors != null
+                ? Collections.unmodifiableList(myAuthors)
+                : Collections.<Author>emptyList();
+    }
 
-		final StringBuilder buffer = new StringBuilder();
-		boolean first = true;
-		for (Author a : authors) {
-			if (!first) {
-				buffer.append(separator);
-			}
-			buffer.append(a.DisplayName);
-			first = false;
-		}
-		return buffer.toString();
-	}
+    public final String authorsString(String separator) {
+        final List<Author> authors = myAuthors;
+        if (authors == null || authors.isEmpty()) {
+            return null;
+        }
 
-	void addAuthorWithNoCheck(Author author) {
-		if (myAuthors == null) {
-			myAuthors = new ArrayList<Author>();
-		}
-		myAuthors.add(author);
-	}
+        final StringBuilder buffer = new StringBuilder();
+        boolean first = true;
+        for (Author a : authors) {
+            if (!first) {
+                buffer.append(separator);
+            }
+            buffer.append(a.DisplayName);
+            first = false;
+        }
+        return buffer.toString();
+    }
 
-	public void removeAllAuthors() {
-		if (myAuthors != null) {
-			myAuthors = null;
-			mySaveState = SaveState.NotSaved;
-		}
-	}
+    void addAuthorWithNoCheck(Author author) {
+        if (myAuthors == null) {
+            myAuthors = new ArrayList<Author>();
+        }
+        myAuthors.add(author);
+    }
 
-	public void addAuthor(Author author) {
-		if (author == null) {
-			return;
-		}
-		if (myAuthors == null) {
-			myAuthors = new ArrayList<Author>();
-			myAuthors.add(author);
-			mySaveState = SaveState.NotSaved;
-		} else if (!myAuthors.contains(author)) {
-			myAuthors.add(author);
-			mySaveState = SaveState.NotSaved;
-		}
-	}
+    public void removeAllAuthors() {
+        if (myAuthors != null) {
+            myAuthors = null;
+            mySaveState = SaveState.NotSaved;
+        }
+    }
 
-	public void addAuthor(String name) {
-		addAuthor(name, null);
-	}
+    public void addAuthor(Author author) {
+        if (author == null) {
+            return;
+        }
+        if (myAuthors == null) {
+            myAuthors = new ArrayList<Author>();
+            myAuthors.add(author);
+            mySaveState = SaveState.NotSaved;
+        } else if (!myAuthors.contains(author)) {
+            myAuthors.add(author);
+            mySaveState = SaveState.NotSaved;
+        }
+    }
 
-	public void addAuthor(String name, String sortKey) {
-		addAuthor(Author.create(name, sortKey));
-	}
+    public void addAuthor(String name) {
+        addAuthor(name, null);
+    }
 
-	public long getId() {
-		return myId;
-	}
+    public void addAuthor(String name, String sortKey) {
+        addAuthor(Author.create(name, sortKey));
+    }
 
-	@Override
-	public void setTitle(String title) {
-		if (title == null) {
-			return;
-		}
-		title = title.trim();
-		if (title.length() == 0) {
-			return;
-		}
-		if (!getTitle().equals(title)) {
-			super.setTitle(title);
-			mySaveState = SaveState.NotSaved;
-		}
-	}
+    public long getId() {
+        return myId;
+    }
 
-	public SeriesInfo getSeriesInfo() {
-		return mySeriesInfo;
-	}
+    public void setId(long id) {
+        this.myId = id;
+    }
 
-	void setSeriesInfoWithNoCheck(String name, String index) {
-		mySeriesInfo = SeriesInfo.createSeriesInfo(name, index);
-	}
+    @Override
+    public void setTitle(String title) {
+        if (title == null) {
+            return;
+        }
+        title = title.trim();
+        if (title.length() == 0) {
+            return;
+        }
+        if (!getTitle().equals(title)) {
+            super.setTitle(title);
+            mySaveState = SaveState.NotSaved;
+        }
+    }
 
-	public void setSeriesInfo(String name, String index) {
-		setSeriesInfo(name, SeriesInfo.createIndex(index));
-	}
+    public SeriesInfo getSeriesInfo() {
+        return mySeriesInfo;
+    }
 
-	public void setSeriesInfo(String name, BigDecimal index) {
-		if (mySeriesInfo == null) {
-			if (name != null) {
-				mySeriesInfo = new SeriesInfo(name, index);
-				mySaveState = SaveState.NotSaved;
-			}
-		} else if (name == null) {
-			mySeriesInfo = null;
-			mySaveState = SaveState.NotSaved;
-		} else if (!name.equals(mySeriesInfo.Series.getTitle()) || mySeriesInfo.Index != index) {
-			mySeriesInfo = new SeriesInfo(name, index);
-			mySaveState = SaveState.NotSaved;
-		}
-	}
+    void setSeriesInfoWithNoCheck(String name, String index) {
+        mySeriesInfo = SeriesInfo.createSeriesInfo(name, index);
+    }
 
-	@Override
-	public String getLanguage() {
-		return myLanguage;
-	}
+    public void setSeriesInfo(String name, String index) {
+        setSeriesInfo(name, SeriesInfo.createIndex(index));
+    }
 
-	public void setLanguage(String language) {
-		if (!ComparisonUtil.equal(myLanguage, language)) {
-			myLanguage = language;
-			resetSortKey();
-			mySaveState = SaveState.NotSaved;
-		}
-	}
+    public void setSeriesInfo(String name, BigDecimal index) {
+        if (mySeriesInfo == null) {
+            if (name != null) {
+                mySeriesInfo = new SeriesInfo(name, index);
+                mySaveState = SaveState.NotSaved;
+            }
+        } else if (name == null) {
+            mySeriesInfo = null;
+            mySaveState = SaveState.NotSaved;
+        } else if (!name.equals(mySeriesInfo.Series.getTitle()) || mySeriesInfo.Index != index) {
+            mySeriesInfo = new SeriesInfo(name, index);
+            mySaveState = SaveState.NotSaved;
+        }
+    }
 
-	public String getEncodingNoDetection() {
-		return myEncoding;
-	}
+    @Override
+    public String getLanguage() {
+        return myLanguage;
+    }
 
-	public void setEncoding(String encoding) {
-		if (!ComparisonUtil.equal(myEncoding, encoding)) {
-			myEncoding = encoding;
-			mySaveState = SaveState.NotSaved;
-		}
-	}
+    public void setLanguage(String language) {
+        if (!ComparisonUtil.equal(myLanguage, language)) {
+            myLanguage = language;
+            resetSortKey();
+            mySaveState = SaveState.NotSaved;
+        }
+    }
 
-	public List<Tag> tags() {
-		return myTags != null
-			? Collections.unmodifiableList(myTags)
-			: Collections.<Tag>emptyList();
-	}
+    public String getEncodingNoDetection() {
+        return myEncoding;
+    }
 
-	public final String tagsString(String separator) {
-		final List<Tag> tags = myTags;
-		if (tags == null || tags.isEmpty()) {
-			return null;
-		}
+    public void setEncoding(String encoding) {
+        if (!ComparisonUtil.equal(myEncoding, encoding)) {
+            myEncoding = encoding;
+            mySaveState = SaveState.NotSaved;
+        }
+    }
 
-		final HashSet<String> tagNames = new HashSet<String>();
-		final StringBuilder buffer = new StringBuilder();
-		boolean first = true;
-		for (Tag t : tags) {
-			if (!first) {
-				buffer.append(separator);
-			}
-			if (!tagNames.contains(t.Name)) {
-				tagNames.add(t.Name);
-				buffer.append(t.Name);
-				first = false;
-			}
-		}
-		return buffer.toString();
-	}
+    public List<Tag> tags() {
+        return myTags != null
+                ? Collections.unmodifiableList(myTags)
+                : Collections.<Tag>emptyList();
+    }
 
-	void addTagWithNoCheck(Tag tag) {
-		if (myTags == null) {
-			myTags = new ArrayList<Tag>();
-		}
-		myTags.add(tag);
-	}
+    public final String tagsString(String separator) {
+        final List<Tag> tags = myTags;
+        if (tags == null || tags.isEmpty()) {
+            return null;
+        }
 
-	public void removeAllTags() {
-		if (myTags != null) {
-			myTags = null;
-			mySaveState = SaveState.NotSaved;
-		}
-	}
+        final HashSet<String> tagNames = new HashSet<String>();
+        final StringBuilder buffer = new StringBuilder();
+        boolean first = true;
+        for (Tag t : tags) {
+            if (!first) {
+                buffer.append(separator);
+            }
+            if (!tagNames.contains(t.Name)) {
+                tagNames.add(t.Name);
+                buffer.append(t.Name);
+                first = false;
+            }
+        }
+        return buffer.toString();
+    }
 
-	public void addTag(Tag tag) {
-		if (tag != null) {
-			if (myTags == null) {
-				myTags = new ArrayList<Tag>();
-			}
-			if (!myTags.contains(tag)) {
-				myTags.add(tag);
-				mySaveState = SaveState.NotSaved;
-			}
-		}
-	}
+    void addTagWithNoCheck(Tag tag) {
+        if (myTags == null) {
+            myTags = new ArrayList<Tag>();
+        }
+        myTags.add(tag);
+    }
 
-	public void addTag(String tagName) {
-		addTag(Tag.getTag(null, tagName));
-	}
+    public void removeAllTags() {
+        if (myTags != null) {
+            myTags = null;
+            mySaveState = SaveState.NotSaved;
+        }
+    }
 
-	public boolean hasLabel(String name) {
-		for (Label l : labels()) {
-			if (name.equals(l.Name)) {
-				return true;
-			}
-		}
-		return false;
-	}
+    public void addTag(Tag tag) {
+        if (tag != null) {
+            if (myTags == null) {
+                myTags = new ArrayList<Tag>();
+            }
+            if (!myTags.contains(tag)) {
+                myTags.add(tag);
+                mySaveState = SaveState.NotSaved;
+            }
+        }
+    }
 
-	public List<Label> labels() {
-		return myLabels != null ? Collections.unmodifiableList(myLabels) : Collections.<Label>emptyList();
-	}
+    public void addTag(String tagName) {
+        addTag(Tag.getTag(null, tagName));
+    }
 
-	void addLabelWithNoCheck(Label label) {
-		if (myLabels == null) {
-			myLabels = new ArrayList<Label>();
-		}
-		myLabels.add(label);
-	}
+    public boolean hasLabel(String name) {
+        for (Label l : labels()) {
+            if (name.equals(l.Name)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-	public void addNewLabel(String label) {
-		addLabel(new Label(label));
-	}
+    public List<Label> labels() {
+        return myLabels != null ? Collections.unmodifiableList(myLabels) : Collections.<Label>emptyList();
+    }
 
-	public void addLabel(Label label) {
-		if (myLabels == null) {
-			myLabels = new ArrayList<Label>();
-		}
-		if (!myLabels.contains(label)) {
-			myLabels.add(label);
-			mySaveState = SaveState.NotSaved;
-		}
-	}
+    void addLabelWithNoCheck(Label label) {
+        if (myLabels == null) {
+            myLabels = new ArrayList<Label>();
+        }
+        myLabels.add(label);
+    }
 
-	public void removeLabel(String label) {
-		if (myLabels != null && myLabels.remove(new Label(label))) {
-			mySaveState = SaveState.NotSaved;
-		}
-	}
+    public void addNewLabel(String label) {
+        addLabel(new Label(label));
+    }
 
-	public List<UID> uids() {
-		return myUids != null ? Collections.unmodifiableList(myUids) : Collections.<UID>emptyList();
-	}
+    public void addLabel(Label label) {
+        if (myLabels == null) {
+            myLabels = new ArrayList<Label>();
+        }
+        if (!myLabels.contains(label)) {
+            myLabels.add(label);
+            mySaveState = SaveState.NotSaved;
+        }
+    }
 
-	public void addUid(String type, String id) {
-		addUid(new UID(type, id));
-	}
+    public void removeLabel(String label) {
+        if (myLabels != null && myLabels.remove(new Label(label))) {
+            mySaveState = SaveState.NotSaved;
+        }
+    }
 
-	void addUidWithNoCheck(UID uid) {
-		if (uid == null) {
-			return;
-		}
-		if (myUids == null) {
-			myUids = new ArrayList<UID>();
-		}
-		myUids.add(uid);
-	}
+    public List<UID> uids() {
+        return myUids != null ? Collections.unmodifiableList(myUids) : Collections.<UID>emptyList();
+    }
 
-	public void addUid(UID uid) {
-		if (uid == null) {
-			return;
-		}
-		if (myUids == null) {
-			myUids = new ArrayList<UID>();
-		}
-		if (!myUids.contains(uid)) {
-			myUids.add(uid);
-			mySaveState = SaveState.NotSaved;
-		}
-	}
+    public void addUid(String type, String id) {
+        addUid(new UID(type, id));
+    }
 
-	public boolean matchesUid(UID uid) {
-		return myUids.contains(uid);
-	}
+    void addUidWithNoCheck(UID uid) {
+        if (uid == null) {
+            return;
+        }
+        if (myUids == null) {
+            myUids = new ArrayList<UID>();
+        }
+        myUids.add(uid);
+    }
 
-	public RationalNumber getProgress() {
-		return myProgress;
-	}
+    public void addUid(UID uid) {
+        if (uid == null) {
+            return;
+        }
+        if (myUids == null) {
+            myUids = new ArrayList<UID>();
+        }
+        if (!myUids.contains(uid)) {
+            myUids.add(uid);
+            mySaveState = SaveState.NotSaved;
+        }
+    }
 
-	public void setProgress(RationalNumber progress) {
-		if (!ComparisonUtil.equal(myProgress, progress)) {
-			myProgress = progress;
-			if (mySaveState == SaveState.Saved) {
-				mySaveState = SaveState.ProgressNotSaved;
-			}
-		}
-	}
+    public boolean matchesUid(UID uid) {
+        return myUids.contains(uid);
+    }
 
-	public void setProgressWithNoCheck(RationalNumber progress) {
-		myProgress = progress;
-	}
+    public RationalNumber getProgress() {
+        return myProgress;
+    }
 
-	public boolean matches(String pattern) {
-		if (MiscUtil.matchesIgnoreCase(getTitle(), pattern)) {
-			return true;
-		}
-		if (mySeriesInfo != null && MiscUtil.matchesIgnoreCase(mySeriesInfo.Series.getTitle(), pattern)) {
-			return true;
-		}
-		if (myAuthors != null) {
-			for (Author author : myAuthors) {
-				if (MiscUtil.matchesIgnoreCase(author.DisplayName, pattern)) {
-					return true;
-				}
-			}
-		}
-		if (myTags != null) {
-			for (Tag tag : myTags) {
-				if (MiscUtil.matchesIgnoreCase(tag.Name, pattern)) {
-					return true;
-				}
-			}
-		}
+    public void setProgress(RationalNumber progress) {
+        if (!ComparisonUtil.equal(myProgress, progress)) {
+            myProgress = progress;
+            if (mySaveState == SaveState.Saved) {
+                mySaveState = SaveState.ProgressNotSaved;
+            }
+        }
+    }
 
-		String fileName = getPath();
-		// first archive delimiter
-		int index = fileName.indexOf(":");
-		// last path delimiter before first archive delimiter
-		if (index == -1) {
-			index = fileName.lastIndexOf("/");
-		} else {
-			index = fileName.lastIndexOf("/", index);
-		}
-		fileName = fileName.substring(index + 1);
-		if (MiscUtil.matchesIgnoreCase(fileName, pattern)) {
-			return true;
-		}
-		return false;
-	}
+    public void setProgressWithNoCheck(RationalNumber progress) {
+        myProgress = progress;
+    }
 
-	@Override
-	public String toString() {
-		return getClass().getName() + "[" + getPath() + ", " + myId + ", " + getTitle() + "]";
-	}
+    public boolean matches(String pattern) {
+        if (MiscUtil.matchesIgnoreCase(getTitle(), pattern)) {
+            return true;
+        }
+        if (mySeriesInfo != null && MiscUtil.matchesIgnoreCase(mySeriesInfo.Series.getTitle(), pattern)) {
+            return true;
+        }
+        if (myAuthors != null) {
+            for (Author author : myAuthors) {
+                if (MiscUtil.matchesIgnoreCase(author.DisplayName, pattern)) {
+                    return true;
+                }
+            }
+        }
+        if (myTags != null) {
+            for (Tag tag : myTags) {
+                if (MiscUtil.matchesIgnoreCase(tag.Name, pattern)) {
+                    return true;
+                }
+            }
+        }
+
+        String fileName = getPath();
+        // first archive delimiter
+        int index = fileName.indexOf(":");
+        // last path delimiter before first archive delimiter
+        if (index == -1) {
+            index = fileName.lastIndexOf("/");
+        } else {
+            index = fileName.lastIndexOf("/", index);
+        }
+        fileName = fileName.substring(index + 1);
+        return MiscUtil.matchesIgnoreCase(fileName, pattern);
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getName() + "[" + getPath() + ", " + myId + ", " + getTitle() + "]";
+    }
 }

@@ -97,7 +97,7 @@ public final class ZLTextRegion {
 		}
 	}
 
-	public static interface Filter {
+	public interface Filter {
 		boolean accepts(ZLTextRegion region);
 	}
 

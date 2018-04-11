@@ -21,6 +21,7 @@ package org.geometerplus.fbreader.fbreader;
 
 import org.geometerplus.fbreader.book.Author;
 import org.geometerplus.fbreader.book.Book;
+import org.geometerplus.fbreader.book.BookCollection;
 import org.geometerplus.fbreader.book.BookUtil;
 import org.geometerplus.fbreader.bookmodel.BookModel;
 import org.geometerplus.fbreader.fbreader.options.ImageOptions;
@@ -33,6 +34,7 @@ import org.geometerplus.fbreader.formats.PluginCollection;
 import org.geometerplus.fbreader.util.AutoTextSnippet;
 import org.geometerplus.zlibrary.core.application.ZLApplication;
 import org.geometerplus.zlibrary.core.application.ZLKeyBindings;
+import org.geometerplus.zlibrary.core.util.RationalNumber;
 import org.geometerplus.zlibrary.core.util.SystemInfo;
 import org.geometerplus.zlibrary.text.hyphenation.ZLTextHyphenator;
 import org.geometerplus.zlibrary.text.model.ZLTextModel;
@@ -41,8 +43,10 @@ import org.geometerplus.zlibrary.text.view.ZLTextParagraphCursor;
 import org.geometerplus.zlibrary.text.view.ZLTextPosition;
 import org.geometerplus.zlibrary.text.view.ZLTextWordCursor;
 
+import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 public final class FBReaderApp extends ZLApplication {
 
@@ -61,8 +65,10 @@ public final class FBReaderApp extends ZLApplication {
     public volatile Book ExternalBook;
 
 
-    public FBReaderApp(SystemInfo systemInfo) {
+    public FBReaderApp(SystemInfo systemInfo, BookCollection collection) {
         super(systemInfo);
+        this.Collection = collection;
+
         //文字放大、缩小
         addAction(ActionCode.INCREASE_FONT, new ChangeFontSizeAction(this, +2));
         addAction(ActionCode.DECREASE_FONT, new ChangeFontSizeAction(this, -2));
@@ -184,6 +190,8 @@ public final class FBReaderApp extends ZLApplication {
         if (!force && Model != null && isSameBook(book, Model.Book)) {
             return;
         }
+        //如果当前有正在阅读的书，保存位置再打开新书
+        storePosition();
 
         BookTextView.setModel(null);
         FootnoteView.setModel(null);
@@ -205,8 +213,15 @@ public final class FBReaderApp extends ZLApplication {
         try {
             //利用内置插件创建填充BookModel
             Model = BookModel.createModel(book, plugin);
+
+            long bookId = Collection.saveBook(book);
+            book.setId(bookId);
+
             ZLTextHyphenator.Instance().load(book.getLanguage());
             BookTextView.setModel(Model.getTextModel());
+            //恢复上次位置
+            gotoStoredPosition();
+
             setView(BookTextView);
             final StringBuilder title = new StringBuilder(book.getTitle());
             if (!book.authors().isEmpty()) {
@@ -227,6 +242,91 @@ public final class FBReaderApp extends ZLApplication {
         getViewWidget().repaint();
     }
 
+    private class PositionSaver implements Runnable {
+        private final Book myBook;
+        private final ZLTextPosition myPosition;
+        private final RationalNumber myProgress;
+
+        PositionSaver(Book book, ZLTextPosition position, RationalNumber progress) {
+            myBook = book;
+            myPosition = position;
+            myProgress = progress;
+        }
+
+        public void run() {
+            Collection.storePosition(myBook.getId(), myPosition);
+            myBook.setProgress(myProgress);
+            Collection.saveBook(myBook);
+        }
+    }
+
+    private class SaverThread extends Thread {
+        private final List<Runnable> myTasks = Collections.synchronizedList(new LinkedList<Runnable>());
+
+        SaverThread() {
+            setPriority(MIN_PRIORITY);
+        }
+
+        void add(Runnable task) {
+            myTasks.add(task);
+        }
+
+        public void run() {
+            while (true) {
+                synchronized (myTasks) {
+                    while (!myTasks.isEmpty()) {
+                        myTasks.remove(0).run();
+                    }
+                }
+                try {
+                    sleep(500);
+                } catch (InterruptedException e) {
+                }
+            }
+        }
+    }
+
+    private final SaverThread mySaverThread = new SaverThread();
+    private volatile ZLTextPosition myStoredPosition;
+    private volatile Book myStoredPositionBook;
+    public final BookCollection Collection;
+
+    private ZLTextFixedPosition getStoredPosition(Book book) {
+        ZLTextFixedPosition.WithTimestamp storedPosition = Collection.getStoredPosition(book.getId());
+        return storedPosition != null ? storedPosition : new ZLTextFixedPosition(0, 0, 0);
+    }
+
+    private void gotoStoredPosition() {
+        myStoredPositionBook = Model != null ? Model.Book : null;
+        if (myStoredPositionBook == null) {
+            return;
+        }
+        myStoredPosition = getStoredPosition(myStoredPositionBook);
+        BookTextView.gotoPosition(myStoredPosition);
+        savePosition();
+    }
+
+    public void storePosition() {
+        final Book bk = Model != null ? Model.Book : null;
+        if (bk != null && bk == myStoredPositionBook && myStoredPosition != null && BookTextView != null) {
+            final ZLTextPosition position = new ZLTextFixedPosition(BookTextView.getStartCursor());
+            if (!myStoredPosition.equals(position)) {
+                myStoredPosition = position;
+                savePosition();
+            }
+        }
+    }
+
+    private void savePosition() {
+        final RationalNumber progress = BookTextView.getProgress();
+        synchronized (mySaverThread) {
+            if (!mySaverThread.isAlive()) {
+                mySaverThread.start();
+            }
+            mySaverThread.add(new PositionSaver(myStoredPositionBook, myStoredPosition, progress));
+        }
+    }
+
 
     public void showBookTextView() {
         setView(BookTextView);
@@ -235,6 +335,7 @@ public final class FBReaderApp extends ZLApplication {
 
     private ZLTextPosition myJumpEndPosition;
     private Date myJumpTimeStamp;
+
     public void tryOpenFootnote(String id) {
         if (Model != null) {
             myJumpEndPosition = null;
@@ -268,7 +369,6 @@ public final class FBReaderApp extends ZLApplication {
             //setBookmarkHighlightings(FootnoteView, modelId);
         }
     }
-
 
 
 }

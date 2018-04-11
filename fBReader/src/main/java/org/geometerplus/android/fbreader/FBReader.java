@@ -36,12 +36,14 @@ import org.geometerplus.android.fbreader.api.FBReaderIntents;
 import org.geometerplus.android.util.UIUtil;
 import org.geometerplus.fbreader.Paths;
 import org.geometerplus.fbreader.book.Book;
+import org.geometerplus.fbreader.book.BookCollection;
 import org.geometerplus.fbreader.book.BookUtil;
 import org.geometerplus.fbreader.fbreader.ActionCode;
 import org.geometerplus.fbreader.fbreader.FBReaderApp;
 import org.geometerplus.fbreader.formats.BookReadingException;
 import org.geometerplus.zlibrary.core.application.ZLApplicationWindow;
 import org.geometerplus.zlibrary.core.filesystem.ZLFile;
+import org.geometerplus.zlibrary.core.util.SystemInfo;
 import org.geometerplus.zlibrary.core.view.ZLViewWidget;
 import org.geometerplus.zlibrary.text.view.ZLTextView;
 import org.geometerplus.zlibrary.ui.android.R;
@@ -86,33 +88,45 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
         setDefaultKeyMode(DEFAULT_KEYS_SEARCH_LOCAL);
         myFBReaderApp = (FBReaderApp) FBReaderApp.Instance();
         if (myFBReaderApp == null) {
-            myFBReaderApp = new FBReaderApp(Paths.systemInfo(this));
+            SystemInfo systemInfo = Paths.systemInfo(this);
+            myFBReaderApp = new FBReaderApp(systemInfo, new BookCollection(systemInfo, this));
         }
 
         myBook = null;
         myFBReaderApp.setWindow(this);
         myFBReaderApp.initWindow();
 
+        //选中文字弹框
         if (myFBReaderApp.getPopupById(SelectionPopup.ID) == null) {
-            new SelectionPopup(myFBReaderApp);//选中文字弹框
+            new SelectionPopup(myFBReaderApp);
+        }
+        //快速翻看弹框
+        if (myFBReaderApp.getPopupById(NavigationPopup.ID) == null) {
+            new NavigationPopup(myFBReaderApp);
         }
 
         //处理超链接
         myFBReaderApp.addAction(ActionCode.PROCESS_HYPERLINK, new ProcessHyperlinkAction(this, myFBReaderApp));
-
         myFBReaderApp.addAction(ActionCode.SELECTION_SHOW_PANEL, new SelectionShowPanelAction(this, myFBReaderApp));
         myFBReaderApp.addAction(ActionCode.SELECTION_HIDE_PANEL, new SelectionHidePanelAction(this, myFBReaderApp));
         myFBReaderApp.addAction(ActionCode.SELECTION_COPY_TO_CLIPBOARD, new SelectionCopyAction(this, myFBReaderApp));
         myFBReaderApp.addAction(ActionCode.SELECTION_SHARE, new SelectionShareAction(this, myFBReaderApp));
 
+        //快速翻看
+        myFBReaderApp.addAction(ActionCode.SHOW_NAVIGATION, new ShowNavigationAction(this, myFBReaderApp));
 
         openBook(getIntent(), true);
+    }
+
+    public void navigate() {
+        ((NavigationPopup)myFBReaderApp.getPopupById(NavigationPopup.ID)).runNavigation();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         ((PopupPanel) myFBReaderApp.getPopupById(SelectionPopup.ID)).setPanelInfo(this, myRootView);
+        ((NavigationPopup)myFBReaderApp.getPopupById(NavigationPopup.ID)).setPanelInfo(this, myRootView);
     }
 
 
@@ -169,6 +183,7 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
     @Override
     protected void onStop() {
         super.onStop();
+        PopupPanel.removeAllWindows(myFBReaderApp, this);
     }
 
     @Override

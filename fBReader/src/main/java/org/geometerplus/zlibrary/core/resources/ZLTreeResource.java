@@ -37,8 +37,8 @@ import java.util.Map;
  * XML 解析后的数据存储结构
  */
 final class ZLTreeResource extends ZLResource {
-	private static interface Condition {
-		abstract boolean accepts(int number);
+	private interface Condition {
+		boolean accepts(int number);
 	}
 
 	private static class ValueCondition implements Condition {

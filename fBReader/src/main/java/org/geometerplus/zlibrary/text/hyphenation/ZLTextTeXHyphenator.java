@@ -103,7 +103,7 @@ final class ZLTextTeXHyphenator extends ZLTextHyphenator {
 			while (--len > 0) {
 				pattern.reset(len);
 				ZLTextTeXHyphenationPattern toApply =
-					(ZLTextTeXHyphenationPattern)table.get(pattern);
+                        table.get(pattern);
 				if (toApply != null) {
 					toApply.apply(values, offset);
 				}

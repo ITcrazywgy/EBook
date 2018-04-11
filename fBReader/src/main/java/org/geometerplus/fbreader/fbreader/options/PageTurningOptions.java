@@ -26,7 +26,7 @@ import org.geometerplus.zlibrary.core.options.ZLStringOption;
 import org.geometerplus.zlibrary.core.view.ZLView;
 
 public class PageTurningOptions {
-	public static enum FingerScrollingType {
+	public enum FingerScrollingType {
 		byTap, byFlick, byTapAndFlick
 	}
 	public final ZLEnumOption<FingerScrollingType> FingerScrolling =

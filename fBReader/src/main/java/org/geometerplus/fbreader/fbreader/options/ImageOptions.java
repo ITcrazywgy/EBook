@@ -29,7 +29,7 @@ public class ImageOptions {
 	public final ZLColorOption ImageViewBackground;
 
 	public final ZLEnumOption<FBView.ImageFitting> FitToScreen;
-	public static enum TapActionEnum {
+	public enum TapActionEnum {
 		doNothing, selectImage, openImageView
 	}
 	public final ZLEnumOption<TapActionEnum> TapAction;
